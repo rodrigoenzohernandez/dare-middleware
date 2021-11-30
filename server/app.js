@@ -4,10 +4,10 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-var indexRouter = require('./routes/index');
-var policiesRouter = require('./routes/policies')
-var clientsRouter = require('./routes/clients')
-var authRouter = require('./routes/auth')
+var indexRouter = require('../src/routes/index');
+var policiesRouter = require('../src/routes/policies')
+var clientsRouter = require('../src/routes/clients')
+var authRouter = require('../src/routes/auth')
 
 const session = require('express-session');
 
