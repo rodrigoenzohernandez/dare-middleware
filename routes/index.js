@@ -1,9 +1,9 @@
 var express = require('express');
 var router = express.Router();
 
+const indexController = require('../controllers/indexController')
+
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  res.json('welcome to dare assessment');
-});
+router.get('/', indexController.getMessage);
 
 module.exports = router;
