@@ -10,12 +10,20 @@ const policiesController = {
       res.send(limitedData);
     } else res.send(data);
   },
-  getPolicy(req, res) {
-    try {
-      res.send('Endpoint /policies/:id - WIP');
-    } catch (error) {
-      res.status(error.response.data.statusCode);
-      res.send(error.response.data);
+  async getPolicy(req, res) {
+    const config = { headers: { Authorization: req.headers.authorization } };
+    const data = await get(res, config);
+    const { id } = req.params;
+    const policyFiltered = data.find((policy) => policy.id === id);
+    if (policyFiltered) res.send(policyFiltered);
+    else {
+      res.status(404);
+      res.send(
+        {
+          code: 404,
+          message: 'not found',
+        },
+      );
     }
   },
 };
