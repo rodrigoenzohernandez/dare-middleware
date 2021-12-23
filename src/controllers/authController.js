@@ -10,7 +10,7 @@ const authController = {
         client_secret: req.body.client_secret,
       };
 
-      const response = await axios.post(`${baseUrl}login`, body);
+      const response = await axios.post(`${baseUrl}/login`, body);
 
       await res.send(response.data);
     } catch (error) {
