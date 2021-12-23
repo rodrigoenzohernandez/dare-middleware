@@ -27,12 +27,20 @@ const clientsController = {
     const limitedData = result.slice(0, limit);
     return res.send(limitedData);
   },
-  getClient(req, res) {
-    try {
-      res.send('Endpoint /clients/:id - WIP');
-    } catch (error) {
-      res.json(error);
+  async getClient(req, res) {
+    const config = { headers: { Authorization: req.headers.authorization } };
+    const data = await get(res, config, req.baseUrl);
+    const { id } = req.params;
+    const clientFiltered = data.find((client) => client.id === id);
+    if (clientFiltered) {
+      const policiesData = await get(res, config, '/policies');
+      // filter the policies according to the current client
+      const policiesFiltered = policiesData.filter((policy) => policy.clientId === id);
+      // add property policies to the return object
+      clientFiltered.policies = policiesFiltered;
+      return res.send(clientFiltered);
     }
+    return errorMsg(res, 404, `No client was found with the id: ${id}`);
   },
   getClientPolicies(req, res) {
     try {
