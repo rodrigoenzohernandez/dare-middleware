@@ -1,4 +1,5 @@
 const get = require('../services/GET');
+const errorMsg = require('../functions/returnErrorMessage');
 
 const policiesController = {
   async getPolicies(req, res) {
@@ -15,16 +16,8 @@ const policiesController = {
     const data = await get(res, config, req.baseUrl);
     const { id } = req.params;
     const policyFiltered = data.find((policy) => policy.id === id);
-    if (policyFiltered) res.send(policyFiltered);
-    else {
-      res.status(404);
-      res.send(
-        {
-          code: 404,
-          message: 'not found',
-        },
-      );
-    }
+    if (policyFiltered) return res.send(policyFiltered);
+    return errorMsg(res, 404, `No policy was found with the id: ${id}`);
   },
 };
 
