@@ -34,11 +34,9 @@ const clientsController = {
         },
       );
     }
-    if (limit) {
-      const limitedData = result.slice(0, limit);
-      return res.send(limitedData);
-    }
-    return res.send(result);
+
+    const limitedData = result.slice(0, limit);
+    return res.send(limitedData);
   },
   getClient(req, res) {
     try {
