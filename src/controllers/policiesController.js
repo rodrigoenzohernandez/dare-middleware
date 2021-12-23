@@ -1,15 +1,19 @@
 const get = require('../services/GET');
 const errorMsg = require('../functions/returnErrorMessage');
+const isInvalidLimit = require('../functions/isInvalidLimit');
 
 const policiesController = {
   async getPolicies(req, res) {
     const config = { headers: { Authorization: req.headers.authorization } };
     const data = await get(res, config, req.baseUrl);
     const { limit } = req.query;
+
     if (limit) {
+      if (await isInvalidLimit(limit)) return errorMsg(res, 404, 'Invalid limit. It must be a number greater than 0');
       const limitedData = data.slice(0, limit);
-      res.send(limitedData);
-    } else res.send(data);
+      return res.send(limitedData);
+    }
+    return res.send(data);
   },
   async getPolicy(req, res) {
     const config = { headers: { Authorization: req.headers.authorization } };
