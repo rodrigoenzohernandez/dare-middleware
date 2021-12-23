@@ -12,7 +12,9 @@ const clientsController = {
 
     let result = data;
 
-    if (await isInvalidLimit(limit)) return errorMsg(res, 404, 'Invalid limit. It must be a number greater thagn 0');
+    if (req.query.limit) {
+      if (await isInvalidLimit(limit)) return errorMsg(res, 404, 'Invalid limit. It must be a number greater than 0');
+    }
 
     if (nameFilter) {
       const filter = nameFilter.toLowerCase();
