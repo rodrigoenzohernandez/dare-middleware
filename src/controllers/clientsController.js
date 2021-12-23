@@ -1,5 +1,6 @@
 const get = require('../services/GET');
 const errorMsg = require('../functions/returnErrorMessage');
+const isInvalidLimit = require('../functions/isInvalidLimit');
 
 const clientsController = {
   async getClients(req, res) {
@@ -11,18 +12,13 @@ const clientsController = {
 
     let result = data;
 
-    const notNumber = Number.isNaN(Number(limit));
-    if (limit <= 0 || notNumber) {
-      res.status(404);
-      return errorMsg(res, 404, 'Invalid limit. It must be a number greater than 0');
-    }
+    if (await isInvalidLimit(limit)) return errorMsg(res, 404, 'Invalid limit. It must be a number greater thagn 0');
 
     if (nameFilter) {
       const filter = nameFilter.toLowerCase();
       result = data.filter((client) => ((client.name).toLowerCase()).includes(filter));
     }
     if (!result.length) {
-      res.status(404);
       return errorMsg(res, 404, 'Not found any clients with that filter');
     }
 
