@@ -2,6 +2,24 @@ const get = require('../services/GET');
 const errorMsg = require('../functions/returnErrorMessage');
 const isInvalidLimit = require('../functions/isInvalidLimit');
 
+async function getClientDetail(req, res) {
+  const config = { headers: { Authorization: req.headers.authorization } };
+  const data = await get(res, config, req.baseUrl);
+  const { id } = req.params;
+  const clientFiltered = data.find((client) => client.id === id);
+  if (clientFiltered) {
+    const policiesData = await get(res, config, '/policies');
+    // filter the policies according to the current client
+    const policiesFiltered = policiesData.filter((policy) => policy.clientId === id);
+
+    // add property policies to the return object
+    clientFiltered.policies = policiesFiltered;
+    return clientFiltered;
+  }
+  errorMsg(res, 404, `No client policies were found with the clientId: ${id}`);
+  return null;
+}
+
 const clientsController = {
   async getClients(req, res) {
     const config = { headers: { Authorization: req.headers.authorization } };
@@ -28,25 +46,14 @@ const clientsController = {
     return res.send(limitedData);
   },
   async getClient(req, res) {
-    const config = { headers: { Authorization: req.headers.authorization } };
-    const data = await get(res, config, req.baseUrl);
-    const { id } = req.params;
-    const clientFiltered = data.find((client) => client.id === id);
-    if (clientFiltered) {
-      const policiesData = await get(res, config, '/policies');
-      // filter the policies according to the current client
-      const policiesFiltered = policiesData.filter((policy) => policy.clientId === id);
-      // add property policies to the return object
-      clientFiltered.policies = policiesFiltered;
-      return res.send(clientFiltered);
-    }
-    return errorMsg(res, 404, `No client was found with the id: ${id}`);
+    const clientDetail = await getClientDetail(req, res);
+    if (clientDetail) res.send(clientDetail);
   },
-  getClientPolicies(req, res) {
-    try {
-      res.send('Endpoint /clients/:id/policies - WIP');
-    } catch (error) {
-      res.json(error);
+  async getClientPolicies(req, res) {
+    const clientDetail = await getClientDetail(req, res);
+    if (clientDetail) {
+      const clientPolicies = clientDetail.policies;
+      res.send(clientPolicies);
     }
   },
 };
