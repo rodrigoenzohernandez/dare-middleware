@@ -1,6 +1,8 @@
 # DARE MIDDLEWARE
 
-## How to start it?
+## First steps 📋
+
+### How to start it? 🚀
 
 ```bash
 cd dare-middleware/
@@ -8,7 +10,19 @@ npm i
 npm start
 ```
 
-## Endpoints - General summary
+### How to run the tests? 🔧
+
+```bash
+cd dare-middleware/
+npm i 
+npm test
+```
+
+## Architecture
+
+![Architecture](config/imgs/architecture.png?raw=true "Architecture")
+
+## Endpoints - General summary 📋
 
 ### AUTH
 
@@ -44,7 +58,7 @@ Response:
 
 #### (GET) /policies
 
-Get the list of policies' client paginated and limited to 10 elements by default.
+Get the list of the client policies limited to 10 elements by default.
 
 ##### Example
 
@@ -77,7 +91,7 @@ GET /policies
 
 #### (GET) /policies/:id
 
-Get the details of a policy's client
+Get the details of a client policies
 
 ##### Example
 
